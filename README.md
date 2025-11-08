@@ -80,9 +80,3 @@ spring:
 | **날짜 합의** | `PUT` | `/api/trips/{tripId}/available-dates` | 가능한 날짜 목록 등록 |
 | **후보지 투표** | `POST` | `/api/trips/candidates/{id}/vote` | 장소 후보지 투표/취소 |
 | **예산 현황** | `GET` | `/api/trips/{tripId}/budget` | 예산 사용 현황 조회 |
-
------
-
-이 템플릿을 `README.md` 파일에 복사하여 붙여넣으신 후, 필요에 따라 내용을 채우거나 수정하시면 됩니다.
-
-혹시 `README.md` 작성과 관련하여 더 궁금한 점이 있으신가요? 😊
