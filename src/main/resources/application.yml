@@ -1,0 +1,28 @@
+# src/main/resources/application.yml
+
+server:
+  port: 8080
+
+spring:
+  # --- 데이터 소스 (MySQL 연결) 설정 ---
+  datasource:
+    # DB 이름: mongletrip_db (확인 완료)
+    url: jdbc:mysql://localhost:3306/mongletrip_db?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+
+    # 사용자 이름은 root 계정 사용
+    username: root
+
+    # ⚠️ 이곳을 당신이_정한_비밀번호 로 변경해야 합니다!
+    password: 'hyeji2628@'
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  # --- JPA (Hibernate) 설정 ---
+  jpa:
+    hibernate:
+      # update: 서버 시작 시 엔티티를 보고 DB 테이블을 생성/업데이트합니다.
+      ddl-auto: update
+    properties:
+      # 실행되는 SQL 쿼리를 콘솔에 표시합니다.
+      hibernate.show_sql: true
+      # SQL 쿼리를 보기 좋게 포맷합니다.
+      hibernate.format_sql: true
