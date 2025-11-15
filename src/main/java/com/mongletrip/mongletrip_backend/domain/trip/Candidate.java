@@ -33,9 +33,11 @@ public class Candidate {
     private boolean isAiRecommended; // AI 추천 장소 여부
 
     @Setter // 일정에 추가될 때 상태 변경을 위해 필요
+    @Builder.Default
     private boolean isItineraryAdded = false; // 일정표 추가 여부
 
     @Column(nullable = false)
+    @Builder.Default
     private int voteCount = 0; // 투표 수 (성능 최적화용)
 
     public void incrementVoteCount() {
