@@ -14,5 +14,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param socialId 해당 플랫폼의 고유 ID
      * @return User 객체 (Optional)
      */
-    Optional<User> findBySocialProviderAndSocialId(String socialProvider, String socialId);
+    Optional<User> findByProviderAndSocialId(String socialProvider, String socialId);
 }

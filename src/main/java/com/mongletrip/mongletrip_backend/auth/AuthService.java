@@ -47,7 +47,7 @@ public class AuthService {
         // -------------------------------------------------------------------
 
         // 2. DB에서 기존 사용자 찾기 (User Repository에 findBySocialIdAndProvider 메서드가 필요함)
-        Optional<User> existingUser = userRepository.findBySocialIdAndProvider(socialId, provider);
+        Optional<User> existingUser = userRepository.findByProviderAndSocialId(socialId, provider);
         User user;
         boolean isRegistered;
 
