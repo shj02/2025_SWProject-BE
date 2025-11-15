@@ -8,11 +8,11 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    // ... (기존에 정의된 메서드들)
-
     /**
-     * API 0: 소셜 로그인 시, Provider와 ID를 이용해 사용자를 찾는 메서드입니다.
-     * findBySocialIdAndProvider 오류를 해결하기 위해 추가합니다.
+     * 소셜 로그인 시, Provider와 ID를 이용해 사용자를 찾습니다.
+     * @param socialProvider 소셜 플랫폼 (NAVER, KAKAO 등)
+     * @param socialId 해당 플랫폼의 고유 ID
+     * @return User 객체 (Optional)
      */
-    Optional<User> findBySocialIdAndProvider(String socialId, String provider);
+    Optional<User> findBySocialProviderAndSocialId(String socialProvider, String socialId);
 }
