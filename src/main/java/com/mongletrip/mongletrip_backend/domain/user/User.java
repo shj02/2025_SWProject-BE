@@ -43,6 +43,7 @@ public class User {
     private List<String> travelStyles;
 
     // 가입 상태 관리
+    @Builder.Default
     private boolean isRegistered = false; // 필수 프로필 등록 및 스타일 선택 완료 여부
 
     // 타임스탬프

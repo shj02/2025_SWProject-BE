@@ -39,6 +39,7 @@ public class Expense {
     private LocalDateTime expenseDate; // 지출 기록 시간
 
     // 이 지출이 정산이 완료되었는지 여부
+    @Builder.Default
     private boolean isSettled = false;
 
     // ExpenseType Enum 정의

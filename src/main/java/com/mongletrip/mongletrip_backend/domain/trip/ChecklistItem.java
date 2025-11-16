@@ -40,6 +40,7 @@ public class ChecklistItem {
 
     private LocalDate dueDate; // 마감일 (선택)
 
+    @Builder.Default
     private boolean isCompleted = false; // 완료 여부
 
     public enum ChecklistType {

@@ -30,5 +30,6 @@ public class Trip {
     private LocalDate endDate;   // 여행 종료 날짜
 
     @Column(nullable = false)
+    @Builder.Default
     private int progress = 0; // 여행 계획 진행률 (0% ~ 100%)
 }

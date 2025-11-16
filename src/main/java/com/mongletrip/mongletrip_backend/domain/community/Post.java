@@ -31,8 +31,11 @@ public class Post {
     private LocalDateTime createdAt;
 
     // 조회수, 공감/댓글 수는 성능을 위해 엔티티에 직접 저장
+    @Builder.Default
     private int viewCount = 0;
+    @Builder.Default
     private int likeCount = 0;
+    @Builder.Default
     private int commentCount = 0;
 
     @PrePersist // 엔티티 저장 전 시간 자동 설정
