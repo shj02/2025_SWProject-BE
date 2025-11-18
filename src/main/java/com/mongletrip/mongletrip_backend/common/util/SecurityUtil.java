@@ -2,13 +2,37 @@
 
 package com.mongletrip.mongletrip_backend.common.util;
 
-// 이 클래스는 JWT 인증 로직이 Spring Security에 구현되었다고 가정하고,
-// 현재 요청을 보낸 사용자(UserId)를 반환하는 역할을 합니다. (임시 구현)
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SecurityUtil {
 
+    /**
+     * SecurityContext에 저장된 Authentication에서 userId(Long)를 꺼낸다.
+     */
     public static Long getCurrentUserId() {
-        // TODO: 실제 JWT/SecurityContext에서 사용자 ID를 추출하는 로직으로 변경해야 합니다.
-        // 현재는 개발의 편의를 위해 임시로 1L을 반환합니다.
-        return 1L;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return null;
+        }
+
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof Long) {
+            return (Long) principal;
+        }
+
+        if (principal instanceof String) {
+            try {
+                return Long.parseLong((String) principal);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+
+        return null;
     }
 }

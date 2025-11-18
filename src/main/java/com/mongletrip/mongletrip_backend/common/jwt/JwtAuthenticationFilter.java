@@ -1,6 +1,7 @@
+// src/main/java/com/mongletrip/mongletrip_backend/common/jwt/JwtAuthenticationFilter.java
+
 package com.mongletrip.mongletrip_backend.common.jwt;
 
-import com.mongletrip.mongletrip_backend.common.util.SecurityUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,40 +16,32 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
-// 이 필터는 HTTP 요청이 들어올 때마다 JWT 토큰을 확인하고 인증 정보를 설정합니다.
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    // 토큰의 유효성을 검증하는 로직이 필요하지만, 여기서는 SecurityUtil을 사용해 임시 인증합니다.
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 1. 헤더에서 토큰을 추출합니다.
-        String token = resolveToken(request);
+        // 1. Authorization 헤더에서 토큰 추출
+        String token = resolveToken(request); // 예: "fake_jwt_token_for_user_12"
 
-        // 2. 토큰이 존재하고 유효하다고 가정하고, 임시 사용자 ID로 인증을 진행합니다.
-        if (token != null && token.startsWith(BEARER_PREFIX)) {
-            // 실제 구현에서는 JWT 토큰을 파싱하여 사용자 ID를 추출해야 하지만,
-            // 현재는 SecurityUtil의 임시 ID(1L)를 사용하여 인증합니다.
-
-            // SecurityUtil.getCurrentUserId()가 1L을 반환하도록 설정되어 있으므로,
-            // 모든 유효한 토큰은 임시적으로 'User ID 1'로 인증됩니다.
-            Long userId = SecurityUtil.getCurrentUserId();
+        if (token != null) {
+            // 2. 편법: fake 토큰에서 userId만 파싱
+            Long userId = extractUserIdFromFakeToken(token);
 
             if (userId != null) {
-                // 임시 인증 객체 생성 (권한은 빈 목록으로 설정)
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
-                        userId, // Principal (사용자 ID)
-                        null,   // Credentials (패스워드)
-                        Collections.emptyList() // Authorities (권한)
+                        userId, // principal
+                        null,
+                        Collections.emptyList()
                 );
-
-                // SecurityContext에 인증 정보 설정
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
@@ -56,12 +49,31 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    // HTTP 헤더에서 JWT 토큰을 추출합니다.
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (bearerToken != null && bearerToken.startsWith(BEARER_PREFIX)) {
+            // "Bearer " 이후 문자열만 반환
             return bearerToken.substring(BEARER_PREFIX.length());
         }
         return null;
+    }
+
+    /**
+     * "fake_jwt_token_for_user_12" 형식에서 마지막 숫자 부분(12)을 userId로 파싱
+     */
+    private Long extractUserIdFromFakeToken(String token) {
+        if (token == null) {
+            return null;
+        }
+        int idx = token.lastIndexOf("_");
+        if (idx == -1 || idx == token.length() - 1) {
+            return null;
+        }
+        String idPart = token.substring(idx + 1);
+        try {
+            return Long.parseLong(idPart);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 }
