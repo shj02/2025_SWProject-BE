@@ -23,22 +23,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";
 
+    private final JwtTokenProvider jwtTokenProvider; // JwtTokenProvider 주입
+
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 1. Authorization 헤더에서 토큰 추출
-        String token = resolveToken(request); // 예: "fake_jwt_token_for_user_12"
+        // 1. Authorization 헤더에서 JWT 토큰 추출
+        String token = resolveToken(request);
 
-        if (token != null) {
-            // 2. 편법: fake 토큰에서 userId만 파싱
-            Long userId = extractUserIdFromFakeToken(token);
+        // 2. 토큰 유효성 검사
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            // 3. 토큰에서 사용자 ID (Subject) 추출
+            String userId = jwtTokenProvider.getUserId(token);
 
+            // 4. Spring Security의 인증 정보로 등록
             if (userId != null) {
+                // principal은 Long 타입의 userId로 저장
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
-                        userId, // principal
+                        Long.parseLong(userId),
                         null,
                         Collections.emptyList()
                 );
@@ -46,34 +51,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
         }
 
+        // 다음 필터로 요청 전달
         filterChain.doFilter(request, response);
     }
 
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (bearerToken != null && bearerToken.startsWith(BEARER_PREFIX)) {
-            // "Bearer " 이후 문자열만 반환
             return bearerToken.substring(BEARER_PREFIX.length());
         }
         return null;
-    }
-
-    /**
-     * "fake_jwt_token_for_user_12" 형식에서 마지막 숫자 부분(12)을 userId로 파싱
-     */
-    private Long extractUserIdFromFakeToken(String token) {
-        if (token == null) {
-            return null;
-        }
-        int idx = token.lastIndexOf("_");
-        if (idx == -1 || idx == token.length() - 1) {
-            return null;
-        }
-        String idPart = token.substring(idx + 1);
-        try {
-            return Long.parseLong(idPart);
-        } catch (NumberFormatException e) {
-            return null;
-        }
     }
 }

@@ -12,6 +12,6 @@ public class ProfileUpdateRequest {
     private String name;
     private String phoneNumber;
     private String gender;
-    private LocalDate birthdate;
+    private LocalDate birthDate;
     private String nationality;
 }

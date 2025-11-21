@@ -37,3 +37,11 @@ social:
     client-secret: 'lvt2hg4m1D'
     token-uri: 'https://nid.naver.com/oauth2.0/token'
     user-info-uri: 'https://openapi.naver.com/v1/nid/me'
+
+# JWT(로그인 토큰) 관련 설정
+jwt:
+  # 토큰을 만들 때 사용하는 비밀키 (절대 외부에 노출되면 안 됩니다)
+  secret: mongletrip-secret-key-for-jwt-token-generation-1234567890
+
+  # 토큰의 유효 시간 (30분)
+  token-valid-time: 1800000
