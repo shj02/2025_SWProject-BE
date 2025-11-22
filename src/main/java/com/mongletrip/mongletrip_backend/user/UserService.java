@@ -77,7 +77,7 @@ public class UserService {
                 request.getName(),
                 request.getPhoneNumber(),
                 request.getGender(),
-                request.getBirthDate(),
+                request.getBirthdate(),
                 request.getNationality()
         );
     }
